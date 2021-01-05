@@ -10,7 +10,6 @@ import com.bobocode.model.CreditAccount;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -129,7 +128,7 @@ public class CrazyOptionals {
     public static Optional<Account> retrieveAccountGmail(AccountProvider accountProvider) {
         return accountProvider
                 .getAccount()
-                .filter(account -> account.getEmail() != null && account.getEmail().contains("gmail"));
+                .filter(account -> account.getEmail() != null && account.getEmail().endsWith("@gmail.com"));
     }
 
     /**
@@ -145,7 +144,7 @@ public class CrazyOptionals {
         return accountProvider
                 .getAccount()
                 .or(fallbackProvider::getAccount)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow();
     }
 
     /**
@@ -159,7 +158,7 @@ public class CrazyOptionals {
         return accounts
                 .stream()
                 .max(Comparator.comparing(Account::getBalance))
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow();
     }
 
     /**
@@ -199,8 +198,7 @@ public class CrazyOptionals {
         return accounts
                 .stream()
                 .map(CreditAccount::getCreditBalance)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .mapToDouble(BigDecimal::doubleValue)
                 .sum();
     }

@@ -32,11 +32,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@TestMethodOrder( MethodOrderer.OrderAnnotation.class )
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CrazyOptionalsTest {
 
     @Test
-    @Order (1)
+    @Order(1)
     void optionalOfStringShouldAcceptNull() {
         Optional<String> optionalString = CrazyOptionals.optionalOfString(null);
 
@@ -292,6 +292,17 @@ class CrazyOptionalsTest {
     void retrieveAccountGmailWhenAccountEmailIsNotGmailShouldReturnEmptyOptional() {
         Account account = Accounts.generateCreditAccount();
         account.setEmail("bobby@yahoo.com");
+
+        Optional<Account> optionalGmailAccount = CrazyOptionals.retrieveAccountGmail(() -> Optional.of(account));
+
+        assertEquals(Optional.empty(), optionalGmailAccount);
+    }
+
+    @Test
+    @Order(26)
+    void retrieveAccountGmailWhenAccountEmailIsNullShouldReturnEmptyOptional() {
+        Account account = Accounts.generateCreditAccount();
+        account.setEmail(null);
 
         Optional<Account> optionalGmailAccount = CrazyOptionals.retrieveAccountGmail(() -> Optional.of(account));
 
