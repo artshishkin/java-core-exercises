@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@TestMethodOrder( MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CrazyLambdasTest {
 
     @Test
@@ -46,9 +46,14 @@ public class CrazyLambdasTest {
 
         boolean nonEmptyStringResult = isEmptyPredicate.test("fasdfa");
         boolean emptyStringResult = isEmptyPredicate.test("");
+        boolean blankStringResult = isEmptyPredicate.test("   ");
+        boolean nullStringResult = isEmptyPredicate.test(null);
+
 
         assertFalse(nonEmptyStringResult);
         assertTrue(emptyStringResult);
+        assertTrue(blankStringResult);
+        assertTrue(nullStringResult);
     }
 
     @Test

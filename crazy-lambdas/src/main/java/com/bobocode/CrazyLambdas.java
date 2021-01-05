@@ -1,10 +1,10 @@
 package com.bobocode;
 
+import org.junit.platform.commons.util.StringUtils;
+
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -28,7 +28,8 @@ public class CrazyLambdas {
      * @return a string predicate
      */
     public static Predicate<String> isEmptyPredicate() {
-        return str -> str == null || str.length() == 0;
+        return ((Predicate<String>) Objects::isNull).or(String::isBlank);
+//        return str -> str == null || str.length() == 0;
     }
 
     /**
@@ -38,7 +39,8 @@ public class CrazyLambdas {
      * @return function that repeats Strings
      */
     public static BiFunction<String, Integer, String> stringMultiplier() {
-        return (str, n) -> IntStream.range(0, n).mapToObj((__) -> str).collect(Collectors.joining());
+        return String::repeat;
+//        return (str, n) -> str.repeat(n);
     }
 
     /**
@@ -60,7 +62,7 @@ public class CrazyLambdas {
      * @return a string predicate
      */
     public static Predicate<String> lengthInRangePredicate(int min, int max) {
-        return (str) -> str.length() >= min && str.length() < max;
+        return str -> str.length() >= min && str.length() < max;
     }
 
     /**
@@ -69,7 +71,7 @@ public class CrazyLambdas {
      * @return int supplier
      */
     public static IntSupplier randomIntSupplier() {
-        return () -> new Random().nextInt();
+        return () -> ThreadLocalRandom.current().nextInt();
     }
 
 
@@ -79,7 +81,7 @@ public class CrazyLambdas {
      * @return int operation
      */
     public static IntUnaryOperator boundedRandomIntSupplier() {
-        return (bound) -> new Random().nextInt(bound);
+        return bound -> ThreadLocalRandom.current().nextInt(bound);
     }
 
     /**
@@ -177,28 +179,7 @@ public class CrazyLambdas {
      * @return a binary function that receiver predicate and function and compose them to create a new function
      */
     public static BiFunction<IntUnaryOperator, IntPredicate, IntUnaryOperator> functionToConditionalFunction() {
-//////        return (operator,predicate)->predicate.test()
-////        return new BiFunction<IntUnaryOperator, IntPredicate, IntUnaryOperator>(){
-////
-////            @Override
-////            public IntUnaryOperator apply(IntUnaryOperator intUnaryOperator, IntPredicate intPredicate) {
-////
-////                return intUnaryOperator.;
-////            }
-////        };
-//
-//        return (operator,predicate)->{
-//
-//            (int)t->{if(predicate.test(t))
-//
-//            };
-//
-//            Optional<IntUnaryOperator> opt=Optional.of(operator).};
-
-
-
-//        IntUnaryOperator.identity()
-        throw new UnsupportedOperationException("It's your job to implement this method"); // todo
+        return (operator, predicate) -> value -> predicate.test(value) ? operator.applyAsInt(value) : value;
     }
 
     /**
